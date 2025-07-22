@@ -55,18 +55,11 @@ def main():
     except ImportError:
         print("⚠️  flake8 not installed, skipping linting")
 
-    # Run unit tests
-    print("\n🧪 Running unit tests...")
-    if not run_command([sys.executable, "-m", "pytest", "tests/", "-m", "unit", "-v"],
-                       "Running unit tests"):
-        print("❌ Unit tests failed")
-        sys.exit(1)
-
-    # Run integration tests
-    print("\n🔗 Running integration tests...")
-    if not run_command([sys.executable, "-m", "pytest", "tests/", "-m", "integration", "-v"],
-                       "Running integration tests"):
-        print("❌ Integration tests failed")
+    # Run all tests
+    print("\n🧪 Running all tests...")
+    if not run_command([sys.executable, "-m", "pytest", "tests/", "-v"],
+                       "Running all tests"):
+        print("❌ Tests failed")
         sys.exit(1)
 
     # Run all tests with coverage

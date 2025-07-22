@@ -2,20 +2,6 @@
 
 A FastAPI microservice that uses [DSPy](https://dspy.ai) to fix ambiguous or incorrect prompts from speech-to-text systems before sending them to language models like Claude.
 
-## 🏗️ Architecture Overview
-
-```plaintext
-Electron (speech to text)
-    ↓
-Node.js (Express)
-    ↓  [call]
-FastAPI Microservice w/ DSPy ← ❗(corrects prompt like "frogs in Ruby" → "procs in Ruby")
-    ↓
-Node.js sends final prompt to Claude
-    ↓
-Electron renders Claude's response
-```
-
 ## ✨ Features
 
 - **DSPy Integration**: Uses DSPy's MIPRO optimization for prompt correction
@@ -35,34 +21,86 @@ Electron renders Claude's response
 - Anthropic API key
 - pip or conda
 
-### Installation
+### Installation (with Virtual Environment)
 
 1. **Clone the repository**
-
    ```bash
    git clone <repository-url>
    cd dspy-fastapi-microservice
    ```
-
-2. **Install dependencies**
-
+2. **Run the setup script**
    ```bash
-   pip install -r requirements.txt
+   python setup_venv.py
    ```
-
-3. **Set up environment variables**
-
+3. **Activate the virtual environment**
+   ```bash
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+4. **Edit environment variables**
    ```bash
    cp env.example .env
    # Edit .env with your Anthropic API key
    ```
-
-4. **Start the server**
+5. **Start the server**
    ```bash
    python start_server.py
    ```
 
 The server will start on `http://localhost:8000` with automatic API documentation available at `/docs`.
+
+## 🔧 Virtual Environment Management
+
+### Creating and Using a Virtual Environment
+
+```bash
+# Create a new virtual environment (if not using setup_venv.py)
+python -m venv venv
+
+# Activate the virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## Usage Examples
+
+### Using curl
+
+```bash
+# Health check
+curl http://localhost:8090/health
+
+# Informational query
+curl -X POST http://localhost:8090/optimize-prompt \
+  -H "Content-Type: application/json" \
+  -d '{
+    "raw_prompt": "frogs in ruby"
+  }'
+```
+
+### Best Practices
+
+- Always activate the virtual environment before working on the project.
+- Install new packages only when the virtual environment is active.
+- Use `deactivate` to exit the virtual environment when done.
+- Update `requirements.txt` after installing new packages:
+  ```bash
+  pip freeze > requirements.txt
+  ```
+
+### Troubleshooting
+
+- If you see errors about missing packages, make sure the virtual environment is activated.
+- If activation fails, recreate the environment:
+  ```bash
+  rm -rf venv
+  python -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+  ```
 
 ## 📋 API Endpoints
 

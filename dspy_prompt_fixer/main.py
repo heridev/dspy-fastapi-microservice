@@ -85,7 +85,7 @@ def initialize_dspy():
         dspy.settings.configure(lm=claude_lm)
 
         # Initialize prompt fixer
-        prompt_fixer = PromptFixer(use_optimization=True)
+        prompt_fixer = PromptFixer(use_optimization=False)  # Disable optimization temporarily
 
         # Get training examples and compile
         examples = get_all_examples()
@@ -169,7 +169,18 @@ async def get_examples(category: Optional[str] = None):
     else:
         examples = get_all_examples()
 
-    return {"examples": examples}
+    # Convert DSPy Example objects back to dictionaries for API response
+    example_dicts = []
+    for example in examples:
+        if hasattr(example, 'raw_prompt') and hasattr(example, 'corrected_prompt'):
+            example_dicts.append({
+                "raw_prompt": example.raw_prompt,
+                "corrected_prompt": example.corrected_prompt
+            })
+        elif isinstance(example, dict):
+            example_dicts.append(example)
+
+    return {"examples": example_dicts}
 
 
 @app.post("/examples", response_model=Dict[str, str])

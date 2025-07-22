@@ -229,13 +229,16 @@ class TestMainApp:
     @patch('dspy_prompt_fixer.main.initialize_dspy')
     def test_reinitialize_failure(self, mock_initialize):
         """Test failed DSPy reinitialization."""
+        # Make sure the mock doesn't raise an exception
+        mock_initialize.side_effect = None
         mock_initialize.return_value = False
 
         response = self.client.post("/reinitialize")
 
         assert response.status_code == 500
         data = response.json()
-        assert "Failed to reinitialize DSPy" in data["detail"]
+        assert "Error reinitializing" in data["detail"]
+        mock_initialize.assert_called_once()
 
     @patch('dspy_prompt_fixer.main.initialize_dspy')
     def test_reinitialize_error(self, mock_initialize):

@@ -45,7 +45,7 @@ Create a file `requirements.txt`:
 ```txt
 fastapi
 uvicorn
-dspy-ai
+dspy
 anthropic  # Claude client
 ```
 

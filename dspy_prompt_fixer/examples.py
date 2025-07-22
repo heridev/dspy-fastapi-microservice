@@ -2,57 +2,59 @@
 Training examples for DSPy prompt correction optimization.
 """
 
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
+import dspy
 
 # Core training examples for programming prompt correction
 PROGRAMMING_EXAMPLES = [
-    {"raw_prompt": "frogs in ruby", "corrected_prompt": "procs in ruby"},
-    {"raw_prompt": "rails and rels", "corrected_prompt": "rails and routes"},
-    {"raw_prompt": "how to use cads in ruby", "corrected_prompt": "how to use procs in ruby"},
-    {"raw_prompt": "ruby on rails gems", "corrected_prompt": "ruby on rails gems"},
-    {"raw_prompt": "javascript promises and async", "corrected_prompt": "javascript promises and async"},
-    {"raw_prompt": "react hooks and state", "corrected_prompt": "react hooks and state"},
-    {"raw_prompt": "python decorators and functions", "corrected_prompt": "python decorators and functions"},
-    {"raw_prompt": "docker containers and images", "corrected_prompt": "docker containers and images"},
-    {"raw_prompt": "git branches and merging", "corrected_prompt": "git branches and merging"},
-    {"raw_prompt": "sql queries and joins", "corrected_prompt": "sql queries and joins"},
-    {"raw_prompt": "api rest endpoints", "corrected_prompt": "api rest endpoints"},
-    {"raw_prompt": "microservices architecture", "corrected_prompt": "microservices architecture"},
-    {"raw_prompt": "machine learning algorithms", "corrected_prompt": "machine learning algorithms"},
-    {"raw_prompt": "data structures and algorithms", "corrected_prompt": "data structures and algorithms"},
-    {"raw_prompt": "web development frameworks", "corrected_prompt": "web development frameworks"},
+    dspy.Example(raw_prompt="frogs in ruby", corrected_prompt="procs in ruby"),
+    dspy.Example(raw_prompt="rails and rels", corrected_prompt="rails and routes"),
+    dspy.Example(raw_prompt="how to use cads in ruby", corrected_prompt="how to use procs in ruby"),
+    dspy.Example(raw_prompt="ruby on rails gems", corrected_prompt="ruby on rails gems"),
+    dspy.Example(raw_prompt="javascript promises and async", corrected_prompt="javascript promises and async"),
+    dspy.Example(raw_prompt="react hooks and state", corrected_prompt="react hooks and state"),
+    dspy.Example(raw_prompt="python decorators and functions", corrected_prompt="python decorators and functions"),
+    dspy.Example(raw_prompt="docker containers and images", corrected_prompt="docker containers and images"),
+    dspy.Example(raw_prompt="git branches and merging", corrected_prompt="git branches and merging"),
+    dspy.Example(raw_prompt="sql queries and joins", corrected_prompt="sql queries and joins"),
+    dspy.Example(raw_prompt="api rest endpoints", corrected_prompt="api rest endpoints"),
+    dspy.Example(raw_prompt="microservices architecture", corrected_prompt="microservices architecture"),
+    dspy.Example(raw_prompt="machine learning algorithms", corrected_prompt="machine learning algorithms"),
+    dspy.Example(raw_prompt="data structures and algorithms", corrected_prompt="data structures and algorithms"),
+    dspy.Example(raw_prompt="web development frameworks", corrected_prompt="web development frameworks"),
 ]
 
 # Additional examples for common speech-to-text errors
 SPEECH_ERROR_EXAMPLES = [
-    {"raw_prompt": "how to create a new rails app", "corrected_prompt": "how to create a new rails app"},
-    {"raw_prompt": "what is dependency injection", "corrected_prompt": "what is dependency injection"},
-    {"raw_prompt": "explain object oriented programming", "corrected_prompt": "explain object oriented programming"},
-    {"raw_prompt": "how to debug javascript code", "corrected_prompt": "how to debug javascript code"},
-    {"raw_prompt": "what are design patterns", "corrected_prompt": "what are design patterns"},
-    {"raw_prompt": "how to optimize database queries", "corrected_prompt": "how to optimize database queries"},
-    {"raw_prompt": "explain restful api design", "corrected_prompt": "explain restful api design"},
-    {"raw_prompt": "what is continuous integration", "corrected_prompt": "what is continuous integration"},
-    {"raw_prompt": "how to write unit tests", "corrected_prompt": "how to write unit tests"},
-    {"raw_prompt": "explain version control systems", "corrected_prompt": "explain version control systems"},
+    dspy.Example(raw_prompt="how to create a new rails app", corrected_prompt="how to create a new rails app"),
+    dspy.Example(raw_prompt="what is dependency injection", corrected_prompt="what is dependency injection"),
+    dspy.Example(raw_prompt="explain object oriented programming",
+                 corrected_prompt="explain object oriented programming"),
+    dspy.Example(raw_prompt="how to debug javascript code", corrected_prompt="how to debug javascript code"),
+    dspy.Example(raw_prompt="what are design patterns", corrected_prompt="what are design patterns"),
+    dspy.Example(raw_prompt="how to optimize database queries", corrected_prompt="how to optimize database queries"),
+    dspy.Example(raw_prompt="explain restful api design", corrected_prompt="explain restful api design"),
+    dspy.Example(raw_prompt="what is continuous integration", corrected_prompt="what is continuous integration"),
+    dspy.Example(raw_prompt="how to write unit tests", corrected_prompt="how to write unit tests"),
+    dspy.Example(raw_prompt="explain version control systems", corrected_prompt="explain version control systems"),
 ]
 
 # Examples for technical terminology corrections
 TECHNICAL_CORRECTIONS = [
-    {"raw_prompt": "lambda functions in python", "corrected_prompt": "lambda functions in python"},
-    {"raw_prompt": "closures and scope in javascript", "corrected_prompt": "closures and scope in javascript"},
-    {"raw_prompt": "inheritance and polymorphism", "corrected_prompt": "inheritance and polymorphism"},
-    {"raw_prompt": "recursion and iteration", "corrected_prompt": "recursion and iteration"},
-    {"raw_prompt": "asynchronous programming patterns", "corrected_prompt": "asynchronous programming patterns"},
-    {"raw_prompt": "memory management in programming", "corrected_prompt": "memory management in programming"},
-    {"raw_prompt": "algorithm complexity analysis", "corrected_prompt": "algorithm complexity analysis"},
-    {"raw_prompt": "software testing methodologies", "corrected_prompt": "software testing methodologies"},
-    {"raw_prompt": "database normalization", "corrected_prompt": "database normalization"},
-    {"raw_prompt": "network protocols and http", "corrected_prompt": "network protocols and http"},
+    dspy.Example(raw_prompt="lambda functions in python", corrected_prompt="lambda functions in python"),
+    dspy.Example(raw_prompt="closures and scope in javascript", corrected_prompt="closures and scope in javascript"),
+    dspy.Example(raw_prompt="inheritance and polymorphism", corrected_prompt="inheritance and polymorphism"),
+    dspy.Example(raw_prompt="recursion and iteration", corrected_prompt="recursion and iteration"),
+    dspy.Example(raw_prompt="asynchronous programming patterns", corrected_prompt="asynchronous programming patterns"),
+    dspy.Example(raw_prompt="memory management in programming", corrected_prompt="memory management in programming"),
+    dspy.Example(raw_prompt="algorithm complexity analysis", corrected_prompt="algorithm complexity analysis"),
+    dspy.Example(raw_prompt="software testing methodologies", corrected_prompt="software testing methodologies"),
+    dspy.Example(raw_prompt="database normalization", corrected_prompt="database normalization"),
+    dspy.Example(raw_prompt="network protocols and http", corrected_prompt="network protocols and http"),
 ]
 
 
-def get_all_examples() -> List[Dict[str, str]]:
+def get_all_examples() -> List[dspy.Example]:
     """
     Get all training examples combined.
 
@@ -62,7 +64,7 @@ def get_all_examples() -> List[Dict[str, str]]:
     return PROGRAMMING_EXAMPLES + SPEECH_ERROR_EXAMPLES + TECHNICAL_CORRECTIONS
 
 
-def get_examples_by_category(category: str) -> List[Dict[str, str]]:
+def get_examples_by_category(category: str) -> List[dspy.Example]:
     """
     Get examples by category.
 
@@ -91,7 +93,7 @@ def add_example(raw_prompt: str, corrected_prompt: str, category: str = "program
         corrected_prompt: The corrected version
         category: Category to add the example to
     """
-    example = {"raw_prompt": raw_prompt, "corrected_prompt": corrected_prompt}
+    example = dspy.Example(raw_prompt=raw_prompt, corrected_prompt=corrected_prompt)
 
     if category == "programming":
         PROGRAMMING_EXAMPLES.append(example)
@@ -116,3 +118,17 @@ def get_example_count() -> Dict[str, int]:
         "technical": len(TECHNICAL_CORRECTIONS),
         "total": len(get_all_examples())
     }
+
+
+def convert_dict_to_dspy_examples(examples: List[Dict[str, str]]) -> List[dspy.Example]:
+    """
+    Convert dictionary examples to DSPy Example objects.
+
+    Args:
+        examples: List of dictionary examples
+
+    Returns:
+        List of DSPy Example objects
+    """
+    return [dspy.Example(raw_prompt=ex["raw_prompt"], corrected_prompt=ex["corrected_prompt"])
+            for ex in examples]

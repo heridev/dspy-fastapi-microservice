@@ -12,22 +12,29 @@ class TestFixProgrammingPrompt:
 
     def test_signature_creation(self):
         """Test that the signature can be created."""
-        signature = FixProgrammingPrompt()
+        signature = FixProgrammingPrompt(raw_prompt="test", corrected_prompt="test")
 
         assert hasattr(signature, 'raw_prompt')
         assert hasattr(signature, 'corrected_prompt')
 
     def test_signature_fields(self):
         """Test that signature fields have correct descriptions."""
-        signature = FixProgrammingPrompt()
+        # Test the class definition, not an instance
+        assert 'raw_prompt' in FixProgrammingPrompt.model_fields
+        assert 'corrected_prompt' in FixProgrammingPrompt.model_fields
 
         # Check that fields have descriptions
-        assert signature.raw_prompt.desc is not None
-        assert signature.corrected_prompt.desc is not None
+        raw_prompt_field = FixProgrammingPrompt.model_fields['raw_prompt']
+        corrected_prompt_field = FixProgrammingPrompt.model_fields['corrected_prompt']
+
+        assert raw_prompt_field.json_schema_extra is not None
+        assert corrected_prompt_field.json_schema_extra is not None
+        assert 'desc' in raw_prompt_field.json_schema_extra
+        assert 'desc' in corrected_prompt_field.json_schema_extra
 
         # Check that descriptions are strings
-        assert isinstance(signature.raw_prompt.desc, str)
-        assert isinstance(signature.corrected_prompt.desc, str)
+        assert isinstance(raw_prompt_field.json_schema_extra['desc'], str)
+        assert isinstance(corrected_prompt_field.json_schema_extra['desc'], str)
 
 
 class TestPromptFixer:
@@ -56,8 +63,8 @@ class TestPromptFixer:
         assert fixer.fix_prompt_module is not None
         assert fixer.compiled_module is None
 
-    @patch('dspy_prompt_fixer.fix_module.MIPRO')
-    @patch('dspy_prompt_fixer.fix_module.ExactMatch')
+    @patch('dspy.teleprompt.MIPROv2')
+    @patch('dspy.evaluate.EM')
     def test_compile_with_examples_success(self, mock_exact_match, mock_mipro):
         """Test successful compilation with examples."""
         mock_metric = Mock()
@@ -79,8 +86,8 @@ class TestPromptFixer:
 
         assert fixer.compiled_module == mock_compiled
 
-    @patch('dspy_prompt_fixer.fix_module.MIPRO')
-    @patch('dspy_prompt_fixer.fix_module.ExactMatch')
+    @patch('dspy.teleprompt.MIPROv2')
+    @patch('dspy.evaluate.EM')
     def test_compile_with_examples_import_error(self, mock_exact_match, mock_mipro):
         """Test compilation with import error."""
         mock_mipro.side_effect = ImportError("Module not found")
