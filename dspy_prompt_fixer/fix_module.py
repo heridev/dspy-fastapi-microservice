@@ -1,0 +1,128 @@
+"""
+DSPy signature and prediction module for prompt correction.
+"""
+
+import dspy
+from typing import Optional
+
+
+class FixProgrammingPrompt(dspy.Signature):
+    """
+    DSPy signature for fixing programming prompts from speech-to-text.
+
+    This signature defines the input and output structure for the prompt
+    correction task, where raw prompts from speech-to-text systems are
+    corrected to proper programming terminology.
+    """
+
+    raw_prompt = dspy.InputField(
+        desc="Raw prompt from speech-to-text system that may contain errors or ambiguities"
+    )
+
+    corrected_prompt = dspy.OutputField(
+        desc="Clean, corrected programming question with proper terminology and clarity"
+    )
+
+
+class PromptFixer:
+    """
+    Main class for prompt correction using DSPy.
+
+    This class encapsulates the DSPy prediction module and provides
+    methods for fixing prompts with optional optimization.
+    """
+
+    def __init__(self, use_optimization: bool = True):
+        """
+        Initialize the PromptFixer.
+
+        Args:
+            use_optimization: Whether to use MIPRO optimization for the prediction module
+        """
+        self.use_optimization = use_optimization
+        self.fix_prompt_module = dspy.Predict(FixProgrammingPrompt)
+        self.compiled_module = None
+
+    def compile_with_examples(self, examples: list) -> None:
+        """
+        Compile the prediction module with training examples using MIPRO optimization.
+
+        Args:
+            examples: List of training examples with 'raw_prompt' and 'corrected_prompt' keys
+        """
+        if not self.use_optimization:
+            return
+
+        try:
+            from dspy.teleprompt import MIPRO
+            from dspy.evaluate import ExactMatch
+
+            # Define scoring function
+            metric = ExactMatch(example_outputs=[ex['corrected_prompt'] for ex in examples])
+            mipro = MIPRO(metric=metric)
+
+            # Compile the module
+            self.compiled_module = mipro.compile(self.fix_prompt_module, trainset=examples)
+
+        except ImportError as e:
+            print(f"Warning: Could not import optimization modules: {e}")
+            print("Falling back to basic prediction module")
+            self.use_optimization = False
+
+    def fix_prompt(self, raw_prompt: str) -> str:
+        """
+        Fix a raw prompt using the DSPy module.
+
+        Args:
+            raw_prompt: The raw prompt from speech-to-text
+
+        Returns:
+            The corrected prompt
+        """
+        if not raw_prompt or not raw_prompt.strip():
+            raise ValueError("Raw prompt cannot be empty")
+
+        try:
+            # Use compiled module if available, otherwise use basic module
+            if self.compiled_module and self.use_optimization:
+                result = self.compiled_module(raw_prompt=raw_prompt)
+            else:
+                result = self.fix_prompt_module(raw_prompt=raw_prompt)
+
+            return result.corrected_prompt
+
+        except Exception as e:
+            raise RuntimeError(f"Error fixing prompt: {str(e)}")
+
+    def get_module_info(self) -> dict:
+        """
+        Get information about the current module configuration.
+
+        Returns:
+            Dictionary with module configuration information
+        """
+        return {
+            "use_optimization": self.use_optimization,
+            "has_compiled_module": self.compiled_module is not None,
+            "module_type": "FixProgrammingPrompt"
+        }
+
+
+# Convenience function for quick prompt fixing
+def fix_prompt_quick(raw_prompt: str, examples: Optional[list] = None) -> str:
+    """
+    Quick function to fix a prompt without creating a full PromptFixer instance.
+
+    Args:
+        raw_prompt: The raw prompt to fix
+        examples: Optional training examples for optimization
+
+    Returns:
+        The corrected prompt
+    """
+    fixer = PromptFixer(use_optimization=examples is not None)
+
+    if examples:
+        fixer.compile_with_examples(examples)
+
+    return fixer.fix_prompt(raw_prompt)
